@@ -15,7 +15,7 @@ class Customer extends Model
         'name',
         'last_name',
         'address',
-        'data_reg',
+        'date_reg',
         'status'
     ];
 

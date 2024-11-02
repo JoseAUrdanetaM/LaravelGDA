@@ -14,7 +14,6 @@ class CustomerController extends Controller
         return response()->json($customers);
     }
 
-
     public function show(Customer $customer)
     {
         return response($customer);
@@ -22,9 +21,23 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'dni' => 'required|string',
+            'email' => 'required|email',
+            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'id_reg' => 'required|exists:regions,id_reg',
+            'id_com' => 'required|exists:communes,id_com',
+        ]);
 
-        $customer = Customer::firstOrCreate($request->all());
-        return response($customer);
+        $validatedData['date_reg'] = now();
+
+        $customer = Customer::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'customer' => $customer,
+        ]);
     }
 
     public function update(Request $request, Customer $customer)
