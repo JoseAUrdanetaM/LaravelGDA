@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Region;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -26,17 +27,34 @@ class RegionController extends Controller
         return response($region);
     }
 
-    public function update(Request $request, Region $region)
+    public function destroy($id)
     {
-        $region->update($request->all());
-        return response($region);
-    }
+        try {
+            $region = Region::findOrFail($id);
 
-    public function destroy(Region $region)
-    {
-        $region->delete();
-        return response()->json([
-            'msg' => 'Region has been deleted'
-        ]);
+            if ($region->status === 'trash') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registro no existe.',
+                ], 400);
+            }
+
+            $region->update(['status' => 'trash']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Region has been logically deleted.',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Region not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while deleting the Region.',
+            ], 500);
+        }
     }
 }

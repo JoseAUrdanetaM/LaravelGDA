@@ -78,34 +78,6 @@ class CustomerController extends Controller
         }
     }
 
-
-    public function update(Request $request, $id)
-    {
-        try {
-            $customer = Customer::findOrFail($id);
-            $validatedData = $request->validate([
-                'dni' => 'required|string',
-                'email' => 'required|email',
-                'name' => 'required|string',
-                'last_name' => 'required|string',
-                'id_reg' => 'required|exists:regions,id_reg',
-                'id_com' => 'required|exists:communes,id_com',
-            ]);
-
-            $customer->update($validatedData);
-
-            return response()->json([
-                'success' => true,
-                'customer' => $customer,
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Customer not found.',
-            ], 404);
-        }
-    }
-
     public function destroy($id)
     {
         try {
@@ -152,6 +124,7 @@ class CustomerController extends Controller
                 ], 400);
             }
 
+            // Realiza la consulta solo de clientes activos
             $query = Customer::where('status', 'A');
 
             if (!empty($validatedData['dni'])) {
@@ -162,11 +135,28 @@ class CustomerController extends Controller
                 $query->where('email', $validatedData['email']);
             }
 
-            $customers = $query->with(['region', 'commune'])->get();
+            // Realiza la consulta y limita los resultados a solo los campos necesarios
+            $customers = $query->with(['region', 'commune'])->get()->map(function ($customer) {
+                return [
+                    'name' => $customer->name,
+                    'last_name' => $customer->last_name,
+                    'address' => $customer->address ?? null, // Devuelve null si no hay dirección
+                    'region' =>  $customer->region->description,
+                    'commune' => $customer->commune->description,
+                ];
+            });
+
+            // Verificar si se encontraron clientes
+            if ($customers->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron clientes con los criterios proporcionados.',
+                ], 404);
+            }
 
             return response()->json([
                 'success' => true,
-                'Customers:' => $customers,
+                'customer' => $customers,
             ]);
         } catch (ValidationException $e) {
             return response()->json([

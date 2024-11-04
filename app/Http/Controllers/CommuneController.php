@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commune;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class CommuneController extends Controller
@@ -35,22 +36,34 @@ class CommuneController extends Controller
         ]);
     }
 
-    public function update(Request $request, Commune $commune)
+    public function destroy($id)
     {
-        $commune->update($request->all());
+        try {
+            $commune = Commune::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'Commune' => $commune,
-        ]);
-    }
+            if ($commune->status === 'trash') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registro no existe.',
+                ], 400);
+            }
 
-    public function destroy(Commune $commune)
-    {
-        $commune->delete();
-        return response()->json([
-            'success' => true,
-            'Message:' => 'Commune has been deleted'
-        ]);
+            $commune->update(['status' => 'trash']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Commune has been logically deleted.',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Commune not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while deleting the Commune.',
+            ], 500);
+        }
     }
 }

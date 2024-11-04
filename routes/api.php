@@ -7,24 +7,15 @@ use App\Http\Controllers\RegionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-
-Route::middleware(['auth.sha1'])->group(function () {
-    Route::apiResource('commune', CommuneController::class);
-    Route::apiResource('region', RegionController::class);
-    Route::get('customers/search', [CustomerController::class, 'search']);
-    Route::apiResource('customers', CustomerController::class);
-});
-
 Route::post('login', [AuthController::class, 'login']);
 
-// Route::apiResource('commune', CommuneController::class);
-// Route::apiResource('region', RegionController::class);
-// Route::get('customers/search', [CustomerController::class, 'search']);
-// Route::apiResource('customers', CustomerController::class);
+Route::apiResource('commune', CommuneController::class);
+Route::apiResource('region', RegionController::class);
+Route::get('customers/search', [CustomerController::class, 'search']);
+Route::apiResource('customers', CustomerController::class);
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
-// Route::post('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
