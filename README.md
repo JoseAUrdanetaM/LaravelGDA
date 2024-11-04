@@ -37,12 +37,18 @@ Antes de instalar este proyecto, asegúrate de tener los siguientes requerimient
     composer install
     
 **3.  Configurar el archivo .env**
--   Configura los valores de conexión a la base de datos:  
+-   Configura los valores de conexión a la base de datos:
+  
 ``DB_CONNECTION=mysql``
+
 ``DB_HOST=127.0.0.1``
+
 ``DB_PORT=3306``
+
 ``DB_DATABASE=mydb``
+
 ``DB_USERNAME=root``
+
 ``DB_PASSWORD=``
 
 **4.  Generar la clave de aplicación:**  
