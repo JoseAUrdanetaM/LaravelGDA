@@ -1,5 +1,5 @@
 ﻿
-# Prueba técnica GPD
+# Prueba Técnica GPD
 
 Este es un proyecto desarrollado con el framework Laravel. Este README proporciona información sobre cómo instalar, configurar y utilizar el servicio, así como detalles sobre los servicios y métodos disponibles.
 
