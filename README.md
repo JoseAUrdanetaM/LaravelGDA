@@ -24,8 +24,8 @@ Antes de instalar este proyecto, asegúrate de tener los siguientes requerimient
 ## Instalación
 
 **1. Clonar el repositorio:**  
- git clone https://github.com/JoseAUrdanetaM/LaravelGDA
-cd LaravelGDA
+ ` git clone https://github.com/JoseAUrdanetaM/LaravelGDA`
+`cd LaravelGDA `
 
 **2. Instalar dependencias con Composer:**
 
@@ -42,12 +42,12 @@ cd LaravelGDA
     `DB_PASSWORD=`
 
 **4. Generar la clave de aplicación:**  
- php artisan key:generate
+`php artisan key:generate`
 
 **5. Ejecutar las migraciones y seeds**
 
 -   Ejecuta las migraciones para crear las tablas en la base de datos:  
-    php artisan migrate
+    ` php artisan migrate`
 
     Este deberá crear las tablas
     `communes,
@@ -58,12 +58,12 @@ tokens,
 users`
 
 -   Corre los seeders para poblar la base de datos con datos iniciales:  
-     php artisan db:seed
+    `php artisan db:seed`
     Para crear datos para testing de
     `	communes,	customers, regions, users`
 
 **6. Iniciar el servidor:**  
- php artisan serve --port=8000
+ `php artisan serve --port=8000  `
 
 Accede al proyecto en [http://localhost:8000](http://localhost:8000)
 
