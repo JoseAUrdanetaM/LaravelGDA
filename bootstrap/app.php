@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthTokenMiddleware;
 use App\Http\Middleware\LogRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
