@@ -76,7 +76,7 @@ Antes de instalar este proyecto, asegúrate de tener los siguientes requerimient
 		  php artisan db:seed
 	 
 	 Para crear datos para testing de 
-   ``	communes,	customers, regions, users``
+   ``	communes, customers, regions, users``
     
 
 **6.  Iniciar el servidor:**  
