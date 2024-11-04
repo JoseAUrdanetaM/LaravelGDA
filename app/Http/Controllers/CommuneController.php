@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commune;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -11,29 +12,66 @@ class CommuneController extends Controller
 
     public function index()
     {
-        $communes = Commune::all();
-        return response()->json([
-            'success' => true,
-            'Communes' => $communes,
-        ]);
+        try {
+            $communes = Commune::where('status', 'A')->get();
+            return response()->json([
+                'success' => true,
+                'regions' => $communes,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve Commune.',
+                'errors' => $e->errors()
+            ], 500);
+        }
     }
 
-    public function show(Commune $commune)
+    public function show($id)
     {
-        return response()->json([
-            'success' => true,
-            'Commune' => $commune,
-        ]);
+        try {
+            $commune = Commune::where('id_com', $id)->where('status', 'A')->firstOrFail();
+            return  response()->json([
+                'success' => true,
+                'region' => $commune,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Commune not found.',
+            ], 404);
+        }
     }
 
     public function store(Request $request)
     {
+        try {
+            $validatedData = $request->validate([
+                "description" => "required|string",
+                "id_reg" => "required|exists:regions,id_reg"
+            ]);
 
-        $commune = Commune::firstOrCreate($request->all());
-        return response()->json([
-            'success' => true,
-            'Commune' => $commune,
-        ]);
+            $validatedData['status'] = 'A';
+
+            $commune = Commune::create($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'commune' => $commune,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating the commune.',
+                'errors' => $e->errors(),
+            ], 500);
+        }
     }
 
     public function destroy($id)

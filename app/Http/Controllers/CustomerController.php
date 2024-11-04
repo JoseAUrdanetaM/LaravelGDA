@@ -22,6 +22,7 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve customers.',
+                'errors' => $e->errors(),
             ], 500);
         }
     }
@@ -29,7 +30,7 @@ class CustomerController extends Controller
     public function show($id)
     {
         try {
-            $customer = Customer::findOrFail($id);
+            $customer = Customer::where('dni', $id)->where('status', 'A')->firstOrFail();
 
             return response()->json([
                 'success' => true,
@@ -74,6 +75,7 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while creating the customer.',
+                'errors' => $e->errors(),
             ], 500);
         }
     }
@@ -100,11 +102,13 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Customer not found.',
+                'errors' => $e->errors(),
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while deleting the customer.',
+                'errors' => $e->errors(),
             ], 500);
         }
     }
@@ -112,11 +116,13 @@ class CustomerController extends Controller
     public function search(Request $request)
     {
         try {
+            // Validar los datos de entrada
             $validatedData = $request->validate([
-                'dni' => 'nullable|string',
+                'dni' => 'nullable|string|not_in:0', // Evitar que 'dni' sea un valor falso como '0'
                 'email' => 'nullable|email',
             ]);
 
+            // Asegurarse de que al menos uno de los campos esté presente
             if (empty($validatedData['dni']) && empty($validatedData['email'])) {
                 return response()->json([
                     'success' => false,
@@ -127,10 +133,12 @@ class CustomerController extends Controller
             // Realiza la consulta solo de clientes activos
             $query = Customer::where('status', 'A');
 
+            // Filtra por 'dni' si está presente y no es un valor falso
             if (!empty($validatedData['dni'])) {
                 $query->where('dni', $validatedData['dni']);
             }
 
+            // Filtra por 'email' si está presente
             if (!empty($validatedData['email'])) {
                 $query->where('email', $validatedData['email']);
             }
@@ -148,26 +156,36 @@ class CustomerController extends Controller
 
             // Verificar si se encontraron clientes
             if ($customers->isEmpty()) {
+                $noResultMessage = 'No se encontraron clientes';
+                if (!empty($validatedData['dni'])) {
+                    $noResultMessage .= " con el DNI {$validatedData['dni']}";
+                }
+                if (!empty($validatedData['email'])) {
+                    $noResultMessage .= " con el email {$validatedData['email']}";
+                }
+                $noResultMessage .= '.';
+
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se encontraron clientes con los criterios proporcionados.',
+                    'message' => $noResultMessage,
                 ], 404);
             }
 
             return response()->json([
                 'success' => true,
-                'customer' => $customers,
+                'customers' => $customers,
             ]);
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => 'Error de validación',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while searching for customers.',
+                'message' => 'Ocurrió un error al buscar clientes.',
+                'errors' => $e->errors(),
             ], 500);
         }
     }

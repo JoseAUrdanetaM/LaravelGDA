@@ -5,39 +5,67 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Token; // Asegúrate de que tienes el modelo Token creado
-use Illuminate\Support\Carbon;
+use App\Models\Token;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            // Validar los datos de entrada
+            $validatedData = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        $user = User::where('email', $request->email)->first();
+            // Buscar al usuario por su email
+            $user = User::where('email', $validatedData['email'])->first();
 
-        // if (!$user || !Hash::check($request->password, $user->password)) {
-        //     return response()->json(['message' => 'Invalid credentials'], 401);
-        // }
+            if (!$user || $validatedData['password'] !== $user->password) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Credenciales inválidas',
+                ], 401);
+            }
 
-        // Genera el token en SHA-1
-        $tokenString = sha1($user->email . now() . rand(200, 500));
+            // Generar el token en SHA-1
+            $tokenString = sha1($user->email . now() . rand(200, 500));
 
-        // Define el tiempo de expiración (ejemplo: 1 hora)
-        $expiresAt = now()->addHour();
+            // Definir el tiempo de expiración (ejemplo: 1 hora)
+            $expiresAt = now()->addHour();
 
-        $user->remember_token = $tokenString;
-        $user->save();
+            // Guardar el token en la tabla de usuarios
+            $user->remember_token = $tokenString;
+            $user->save();
 
-        $token = Token::create([
-            'user_id' => $user->id,
-            'token' => $tokenString,
-            'expires_at' => $expiresAt,
-        ]);
+            // Crear el registro del token en la tabla de tokens
+            Token::create([
+                'user_id' => $user->id,
+                'token' => $tokenString,
+                'expires_at' => $expiresAt,
+            ]);
 
-        return response()->json(['token' => $tokenString]);
+            // Responder con éxito y el token generado
+            return response()->json([
+                'success' => true,
+                'msg' => 'User logged in',
+                'token' => $tokenString,
+            ]);
+        } catch (ValidationException $e) {
+            // Captura de errores de validación
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors(), // Detalles de los errores de validación
+            ], 422);
+        } catch (\Exception $e) {
+            // Captura de cualquier otro error
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrió un error en el inicio de sesión',
+                'errors' => $e->errors(),
+            ], 500);
+        }
     }
 }
