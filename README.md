@@ -154,16 +154,24 @@ Cada controlador expone una serie de métodos. Aquí tienes una lista de algunos
 
 
      Commune
-        -   `GET /api/commune` - Listar todas las comunas.
-        -   `GET /api/commune/{id}` - Obtener detalles de una comuna específica
-        -   `POST /api/commune` - Crear una nueva comuna.
-        -   `DELETE /api/commune/{id}` - Eliminar una comuna.
+
+    `GET /api/commune` - Listar todas las comunas.
+
+    `GET /api/commune/{id}` - Obtener detalles de una comuna específica
+
+    `POST /api/commune` - Crear una nueva comuna.
+
+    `DELETE /api/commune/{id}` - Eliminar una comuna.
                
      Region
-        -   `GET /api/region` - Listar todas las regiones.
-        -   `GET /api/region/{id}` - Obtener detalles de una región específica
-        -   `POST /api/region` - Crear una nueva región.
-        -   `DELETE /api/region/{id}` - Eliminar una región.
+
+    `GET /api/region` - Listar todas las regiones.
+
+    `GET /api/region/{id}` - Obtener detalles de una región específica
+
+    `POST /api/region` - Crear una nueva región.
+
+    `DELETE /api/region/{id}` - Eliminar una región.
 
 -   **Uso en Postman**:
     
