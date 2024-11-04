@@ -12,7 +12,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(AuthTokenMiddleware::class)->group(function () {
     Route::get('customers/search', [CustomerController::class, 'search']);
-    Route::apiResource('region', RegionController::class)->only(['index', 'store', 'destroy']);
-    Route::apiResource('customers', CustomerController::class)->only(['index', 'store', 'destroy']);
-    Route::apiResource('commune', CommuneController::class)->only(['index', 'store', 'destroy']);
+    Route::apiResource('region', RegionController::class)->only(['index', 'show', 'store', 'destroy']);
+    Route::apiResource('customers', CustomerController::class)->only(['index', 'show', 'store', 'destroy']);
+    Route::apiResource('commune', CommuneController::class)->only(['index', 'show', 'store', 'destroy']);
 });

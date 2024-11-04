@@ -22,7 +22,7 @@ class AuthController extends Controller
             // Buscar al usuario por su email
             $user = User::where('email', $validatedData['email'])->first();
 
-            if (!$user || $validatedData['password'] !== $user->password) {
+            if (!$user || !Hash::check($validatedData['password'], $user->password)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Credenciales inválidas',
