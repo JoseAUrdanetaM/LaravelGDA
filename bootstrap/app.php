@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        //Se aplica el middlewere LogRequest a todas las solicitudes HTTP que genere el sistema
         $middleware->append(LogRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -128,9 +128,9 @@ return [
         ],
 
         'custom' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/logrequest.log'),
-            'level' => 'info',
+            'driver' => 'single', // Define el tipo de logging (en este caso, un archivo único)
+            'path' => storage_path('logs/logrequest.log'), // Ruta del archivo de log (storage/logs/)
+            'level' => 'info', // El nivel de logging (info, debug, error, etc.)
         ],
 
     ],

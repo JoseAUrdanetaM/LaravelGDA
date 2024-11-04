@@ -15,7 +15,7 @@ class AuthTokenMiddleware
 
         // Verificar si el token está presente
         if (!$token) {
-            return response()->json(['error' => 'Token not provided'], 401);
+            return response()->json(['error' => 'Token not provided'], 401); // Error si no se proporciona el token
         }
 
         // Buscar el token en la base de datos
@@ -23,7 +23,7 @@ class AuthTokenMiddleware
 
         // Verificar si el token existe y no ha expirado
         if (!$tokenData || $tokenData->expires_at < now()) {
-            return response()->json(['error' => 'Token is invalid or has expired'], 401);
+            return response()->json(['error' => 'Token is invalid or has expired'], 401); // Error si el token es inválido o ha expirado
         }
 
         // Si el token es válido, continuar con la solicitud

@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            // Validar los datos de entrada
+            // Validar los datos de entrada para el inicio de sesión
             $validatedData = $request->validate([
                 'email' => 'required|email',
                 'password' => 'required|string',
@@ -22,17 +22,18 @@ class AuthController extends Controller
             // Buscar al usuario por su email
             $user = User::where('email', $validatedData['email'])->first();
 
+            // Verificar las credenciales del usuario
             if (!$user || !Hash::check($validatedData['password'], $user->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Credenciales inválidas',
+                    'message' => 'Invalid credentials',
                 ], 401);
             }
 
             // Generar el token en SHA-1
             $tokenString = sha1($user->email . now() . rand(200, 500));
 
-            // Definir el tiempo de expiración (ejemplo: 1 hora)
+            // Definir el tiempo de expiración del token (En este caso se agrega 1 hora)
             $expiresAt = now()->addHour();
 
             // Guardar el token en la tabla de usuarios
@@ -56,15 +57,15 @@ class AuthController extends Controller
             // Captura de errores de validación
             return response()->json([
                 'success' => false,
-                'message' => 'Error de validación',
+                'message' => 'Validation error',
                 'errors' => $e->errors(), // Detalles de los errores de validación
             ], 422);
         } catch (\Exception $e) {
             // Captura de cualquier otro error
             return response()->json([
                 'success' => false,
-                'message' => 'Ocurrió un error en el inicio de sesión',
-                'errors' => $e->errors(),
+                'message' => 'An error occurred during',
+                'errors' => $e->getMessage(),
             ], 500);
         }
     }

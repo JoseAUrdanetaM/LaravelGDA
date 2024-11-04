@@ -8,6 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
+
+        //Se crea esquema de tokens (se generará al momento de logear)
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Relación con la tabla de usuarios

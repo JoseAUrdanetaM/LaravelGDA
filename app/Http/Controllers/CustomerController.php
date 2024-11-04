@@ -9,27 +9,31 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerController extends Controller
 {
-
+    //Mostrar todos los Customers
     public function index()
     {
         try {
+            // Mostrar todos los customers activos
             $customers = Customer::where('status', 'A')->get();
             return response()->json([
                 'success' => true,
                 'customers' => $customers,
             ]);
         } catch (\Exception $e) {
+            //Manejo de errores al mostrar clientes
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve customers.',
-                'errors' => $e->errors(),
+                'errors' => $e->getMessage(),
             ], 500);
         }
     }
 
+    //Mostrar Customer acorde a ID
     public function show($id)
     {
         try {
+            //Mostrar cliente especifico por ID que se encuentre activo
             $customer = Customer::where('dni', $id)->where('status', 'A')->firstOrFail();
 
             return response()->json([
@@ -37,6 +41,7 @@ class CustomerController extends Controller
                 'customer' => $customer,
             ]);
         } catch (ModelNotFoundException $e) {
+            //Manejo de errores en caso de no encontrar el id
             return response()->json([
                 'success' => false,
                 'message' => 'Customer not found.',
@@ -44,9 +49,11 @@ class CustomerController extends Controller
         }
     }
 
+    //Agregar nuevo Customer
     public function store(Request $request)
     {
         try {
+            // Validar los datos de entrada para crear un nuevo customer
             $validatedData = $request->validate([
                 'dni' => 'required|string|unique:customers,dni',
                 'email' => 'required|email|unique:customers,email',
@@ -56,9 +63,11 @@ class CustomerController extends Controller
                 'id_com' => 'required|exists:communes,id_com',
             ]);
 
-            $validatedData['status'] = 'A'; // Establece el estado activo por defecto
+            // Establecer el estado como activo por defecto y la fecha de registro
+            $validatedData['status'] = 'A';
             $validatedData['date_reg'] = now();
 
+            // Crear un nuevo cliente
             $customer = Customer::create($validatedData);
 
             return response()->json([
@@ -66,25 +75,30 @@ class CustomerController extends Controller
                 'customer' => $customer,
             ]);
         } catch (ValidationException $e) {
+            // Manejar errores de validación
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Manejar cualquier otro error
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while creating the customer.',
-                'errors' => $e->errors(),
+                'errors' => $e->getMessage(),
             ], 500);
         }
     }
 
+    //Eliminar Customer
     public function destroy($id)
     {
         try {
+            // Buscar el customer por ID
             $customer = Customer::findOrFail($id);
 
+            // Verificar si el cliente ya está eliminado lógicamente (status: trash)
             if ($customer->status === 'trash') {
                 return response()->json([
                     'success' => false,
@@ -92,6 +106,7 @@ class CustomerController extends Controller
                 ], 400);
             }
 
+            //Actualiza el estado del customer a Trash
             $customer->update(['status' => 'trash']);
 
             return response()->json([
@@ -99,20 +114,22 @@ class CustomerController extends Controller
                 'message' => 'Customer has been logically deleted.',
             ]);
         } catch (ModelNotFoundException $e) {
+            //Manejo de errores en caso de no conseguir el cliente.
             return response()->json([
                 'success' => false,
                 'message' => 'Customer not found.',
-                'errors' => $e->errors(),
             ], 404);
         } catch (\Exception $e) {
+            //Manejo de otros errores
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while deleting the customer.',
-                'errors' => $e->errors(),
+                'errors' => $e->getMessage(),
             ], 500);
         }
     }
 
+    //Buscar clientes acorde a DNI o correo
     public function search(Request $request)
     {
         try {
@@ -126,7 +143,7 @@ class CustomerController extends Controller
             if (empty($validatedData['dni']) && empty($validatedData['email'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Debe proporcionar un DNI o un email para la búsqueda.',
+                    'message' => 'You must provide a DNI or an email for the search.',
                 ], 400);
             }
 
@@ -156,12 +173,12 @@ class CustomerController extends Controller
 
             // Verificar si se encontraron clientes
             if ($customers->isEmpty()) {
-                $noResultMessage = 'No se encontraron clientes';
+                $noResultMessage = 'No customers found';
                 if (!empty($validatedData['dni'])) {
-                    $noResultMessage .= " con el DNI {$validatedData['dni']}";
+                    $noResultMessage .= " with the DNI {$validatedData['dni']}";
                 }
                 if (!empty($validatedData['email'])) {
-                    $noResultMessage .= " con el email {$validatedData['email']}";
+                    $noResultMessage .= " with the email {$validatedData['email']}";
                 }
                 $noResultMessage .= '.';
 
@@ -177,15 +194,17 @@ class CustomerController extends Controller
             ]);
         } catch (ValidationException $e) {
             return response()->json([
+                //Manejo de erroe en validaciones
                 'success' => false,
-                'message' => 'Error de validación',
+                'message' => 'Validation error',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            //Manejo de otros errores
             return response()->json([
                 'success' => false,
-                'message' => 'Ocurrió un error al buscar clientes.',
-                'errors' => $e->errors(),
+                'message' => 'An error occurred while searching for customers.',
+                'errors' => $e->getMessage(),
             ], 500);
         }
     }
