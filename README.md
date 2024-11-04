@@ -123,6 +123,7 @@ Cada controlador expone una serie de métodos. Aquí tienes una lista de algunos
 -   show($id): Devuelve los detalles de un cliente específico.
 -   store(Request $request): Crea un nuevo cliente.
 -   destroy($id): Elimina un cliente existente.
+-   search(): Busca clientes acorde a DNI o Correo.
 
 ### CommuneController
 
