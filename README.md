@@ -1,66 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+﻿
+# Proyecto Laravel, prueba técnica GPD
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este es un proyecto desarrollado con el framework Laravel. Este README proporciona información sobre cómo instalar, configurar y utilizar el servicio, así como detalles sobre los servicios y métodos disponibles.
 
-## About Laravel
+## Tabla de Contenidos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Requerimientos Mínimos
+-   Instalación
+-   Estructura del Proyecto
+-   Definición de Servicios
+-   Métodos de Servicio
+-   Uso
+-   Comandos adicionales de Artisan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requerimientos Mínimos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Antes de instalar este proyecto, asegúrate de tener los siguientes requerimientos:
 
-## Learning Laravel
+-   PHP ^8.2
+-   Composer 
+-   MySQL
+-   Postman (para probar las rutas de la API, opcional)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**1.  Clonar el repositorio:**  
+   `` git clone https://github.com/JoseAUrdanetaM/LaravelGDA``
+   ``cd LaravelGDA ``
+    
+**2.  Instalar dependencias con Composer:**  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    composer install
+    
+**3.  Configurar el archivo .env**
+-   Configura los valores de conexión a la base de datos:  
+``DB_CONNECTION=mysql``
+``DB_HOST=127.0.0.1``
+``DB_PORT=3306``
+``DB_DATABASE=mydb``
+``DB_USERNAME=root``
+``DB_PASSWORD=``
 
-## Laravel Sponsors
+**4.  Generar la clave de aplicación:**  
+``php artisan key:generate``
+    
+**5.  Ejecutar las migraciones y seeds**
+    
+-   Ejecuta las migraciones para crear las tablas en la base de datos:  
+   `` php artisan migrate``
+	
+	Este deberá crear las tablas
+	``
+	communes,
+	customers,
+	migrations,
+	regions,
+	tokens,
+	users
+	``
+    
+-   Corre los seeders para poblar la base de datos con datos iniciales:  
+   ``php artisan db:seed``
+	 
+	 Para crear datos para testing de 
+   ``	communes,	customers, regions, users``
+    
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**6.  Iniciar el servidor:**  
+    ``php artisan serve --port=8000  ``
+    
+   Accede al proyecto en [http://localhost:8000](http://localhost:8000)
+    
 
-### Premium Partners
+## Estructura del Proyecto
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+-   app/: Contiene la lógica de la aplicación, incluyendo modelos y controladores.
+-   database/: Contiene migraciones, seeders y la base de datos.
+-   routes/: Definición de las rutas de la aplicación.
 
-## Contributing
+## Definición de Servicios
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Este proyecto incluye varios servicios que permiten realizar operaciones sobre las entidades de la aplicación. A continuación se describen los principales servicios:
 
-## Code of Conduct
+-   AuthController: Maneja la autenticación de usuarios.
+-   RegionController: Gestiona las regiones.
+-   CustomerController: Permite realizar operaciones CRUD sobre los clientes.
+-   CommuneController: Maneja las comunas.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+## Métodos de Servicio
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Cada controlador expone una serie de métodos. Aquí tienes una lista de algunos de los métodos más utilizados:
 
-## License
+### AuthController
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   login(Request $request): Inicia sesión y devuelve un token de autenticación.
+
+### RegionController
+
+-   index(): Devuelve una lista de todas las regiones.
+-   show($id): Devuelve los detalles de una región específica.
+-   store(Request $request): Crea una nueva región.
+-   destroy($id): Elimina una región existente.
+
+### CustomerController
+
+-   index(): Devuelve una lista de todos los clientes.
+-   show($id): Devuelve los detalles de un cliente específico.
+-   store(Request $request): Crea un nuevo cliente.
+-   destroy($id): Elimina un cliente existente.
+
+### CommuneController
+
+-   index(): Devuelve una lista de todas las comunas.
+-   show($id): Devuelve los detalles de una comuna específica.
+-   store(Request $request): Crea una nueva comuna.
+-   destroy($id): Elimina una comuna existente.
+
+## Uso
+
+**Autenticación**:
+
+-   Ruta para autenticarse:
+
+> email: test@example.com password: password
+
+``POST /api/login``
+
+ Envía las credenciales y obtén un token para acceder a las demás rutas.
+-   **Endpoints de la API**:
+    
+    -   Todos los endpoints están protegidos por el middleware de autenticación y requieren el token de sesión obtenido en el login. 
+    
+     Customer
+        -   `GET /api/customers` - Listar todas los clientes.
+        -   `GET /api/customers/{id}` - Obtener detalles de un cliente especifico
+        -   `POST /api/customers` - Crear un nuevo cliente.
+        -   `DELETE /api/customers/{id}` - Eliminar un cliente.
+        -  `GET /api/customers/search` - Obtener datos de cliente según DNI o correo.
+
+
+     Commune
+        -   `GET /api/commune` - Listar todas las comunas.
+        -   `GET /api/commune/{id}` - Obtener detalles de una comuna específica
+        -   `POST /api/commune` - Crear una nueva comuna.
+        -   `DELETE /api/commune/{id}` - Eliminar una comuna.
+               
+     Region
+        -   `GET /api/region` - Listar todas las regiones.
+        -   `GET /api/region/{id}` - Obtener detalles de una región específica
+        -   `POST /api/region` - Crear una nueva región.
+        -   `DELETE /api/region/{id}` - Eliminar una región.
+
+-   **Uso en Postman**:
+    
+    -   Para simplificar las pruebas, puedes importar la colección de Postman que contiene las rutas configuradas.
+    -   ID del workspace de Postman para acceder a la colección: `2eded0a6-241f-4dc1-8214-735d9755476f`
+    -   En Postman, ve a **Workspaces** > **Switch Workspace**, busca este ID, y tendrás acceso a las rutas configuradas para probar la API.
+## Comandos adicionales de Artisan
+
+-   **Limpiar caché de vistas**:
+``php artisan view:clear``
