@@ -141,11 +141,16 @@ Cada controlador expone una serie de métodos. Aquí tienes una lista de algunos
     -   Todos los endpoints están protegidos por el middleware de autenticación y requieren el token de sesión obtenido en el login. 
     
      Customer
-        -   `GET /api/customers` - Listar todas los clientes.
-        -   `GET /api/customers/{id}` - Obtener detalles de un cliente especifico
-        -   `POST /api/customers` - Crear un nuevo cliente.
-        -   `DELETE /api/customers/{id}` - Eliminar un cliente.
-        -  `GET /api/customers/search` - Obtener datos de cliente según DNI o correo.
+    
+    `GET /api/customers` - Listar todas los clientes.
+    
+    `GET /api/customers/{id}` - Obtener detalles de un cliente especifico
+
+    `POST /api/customers` - Crear un nuevo cliente.
+
+    `DELETE /api/customers/{id}` - Eliminar un cliente.
+
+    `GET /api/customers/search` - Obtener datos de cliente según DNI o correo.
 
 
      Commune
