@@ -75,7 +75,7 @@ Antes de instalar este proyecto, asegúrate de tener los siguientes requerimient
 
 **6.  Iniciar el servidor:**  
 
-	    php artisan serve --port=8000  
+    php artisan serve --port=8000  
     
    Accede al proyecto en [http://localhost:8000](http://localhost:8000)
     
