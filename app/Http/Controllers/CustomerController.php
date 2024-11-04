@@ -48,8 +48,8 @@ class CustomerController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'dni' => 'required|string',
-                'email' => 'required|email',
+                'dni' => 'required|string|unique:customers,dni',
+                'email' => 'required|email|unique:customers,email',
                 'name' => 'required|string',
                 'last_name' => 'required|string',
                 'id_reg' => 'required|exists:regions,id_reg',
