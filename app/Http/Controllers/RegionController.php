@@ -14,7 +14,6 @@ class RegionController extends Controller
         return response()->json($regions);
     }
 
-
     public function show(Region $region)
     {
         return response($region);
